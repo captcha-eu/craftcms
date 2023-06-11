@@ -1,6 +1,6 @@
 <?php
 
-namespace captchaeu\craftcaptchaeu;
+namespace CaptchaEU;
 
 class Service
 {

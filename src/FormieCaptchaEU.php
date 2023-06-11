@@ -1,6 +1,6 @@
 <?php
 
-namespace captchaeu\craftcaptchaeu;
+namespace CaptchaEU;
 
 use Craft;
 use verbb\formie\base\Captcha;
@@ -33,7 +33,7 @@ class FormieCaptchaEU extends Captcha
 
     public function getSettingsHtml(): string
     {
-        return Craft::$app->getView()->renderTemplate('_captcha_eu_cp/_plugin-settings', [
+        return Craft::$app->getView()->renderTemplate('_captcha_eu_cp/_formie-plugin-settings', [
             'integration' => $this,
         ]);
     }

@@ -1,30 +1,76 @@
-{% import '_includes/forms' as forms %}
-{% import 'verbb-base/_macros' as macros %}
+{% import "_includes/forms" as forms %}
+
+<h2>Captcha.eu Settings</h2>
 
 {{ forms.autosuggestField({
-    label: 'Public Key' | t('formie'),
+    label: 'Public Key',
+    instructions: 'Your Public Key',
+    id: 'publicKey',
     name: 'publicKey',
+    value: settings.publicKey,
     required: true,
     suggestEnvVars: true,
-    value: integration.settings.publicKey ?? '',
-    warning: macros.configWarning('siteKey', 'formie'),
-}) }}
+    errors: settings.getErrors('publicKey')
+})
+}}
 
 {{ forms.autosuggestField({
-    label: 'Rest Key' | t('formie'),
+    label: 'Rest Key',
+    instructions: 'Your RestKey',
+    id: 'restKey',
     name: 'restKey',
+    value: settings.restKey,
     required: true,
     suggestEnvVars: true,
-    value: integration.settings.restKey ?? '',
-    warning: macros.configWarning('restKey', 'formie'),
-}) }}
+    errors: settings.getErrors('restKey')
+})
+}}
 
 {{ forms.autosuggestField({
-    label: 'Endpoint' | t('formie'),
-    name: 'endPoint',
+    label: 'Endpoint',
+    instructions: 'Endpoint',
+    id: 'endpoint',
+    name: 'endpoint',
+    value: settings.endpoint,
     required: true,
     suggestEnvVars: true,
-    value: integration.settings.endPoint ?? 'https://www.captcha.eu',
-    warning: macros.configWarning('endPoint', 'formie'),
-}) }}
+    errors: settings.getErrors('endpoint')
+})
+}}
+
+<hr>
+
+<h2>Validate forms automatically:</h2>
+
+{{ forms.lightswitchField({
+    label: 'Validate contact forms',
+    instructions: 'Enable to validate all forms with when using the [Contact Form plugin](https://github.com/craftcms/contact-form).',
+    id: 'validateContactForm',
+    name: 'validateContactForm',
+    on: settings.validateContactForm
+})
+}}
+
+{{ forms.lightswitchField({
+    label: 'Validate users registration',
+    instructions: 'Enable to validate the user registration forms',
+    id: 'validateUsersRegistration',
+    name: 'validateUsersRegistration',
+    on: settings.validateUsersRegistration
+})
+}}
+
+<div class="pane">
+    <p>
+        <span class="warning" data-icon="alert"></span>
+        You still have to add this to your twig template inside the &lt;form&gt; tag:
+    </p>
+    <code>
+        {{ '{{' }} craft.captchaEU.intercept() {{ '}}' }}
+    </code>
+</div>
+
+
+
+
 

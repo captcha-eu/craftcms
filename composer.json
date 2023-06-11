@@ -17,12 +17,12 @@
     },
     "autoload": {
         "psr-4": {
-            "captchaeu\\craftcaptchaeu\\": "src/"
+            "CaptchaEU\\": "src/"
         }
     },
     "extra": {
         "handle": "captcha-eu",
-        "name": "captcha-eu",
+        "name": "captcha.eu",
         "developer": "captcha-eu",
         "documentationUrl": ""
     },
@@ -30,6 +30,9 @@
         "check-cs": "ecs check --ansi",
         "fix-cs": "ecs check --ansi --fix",
         "phpstan": "phpstan --memory-limit=1G"
+    },
+    "components": {
+        "validate": "CaptchaEU\\ValidateService"
     },
     "config": {
         "sort-packages": true,
