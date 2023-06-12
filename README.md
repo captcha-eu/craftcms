@@ -23,7 +23,7 @@ Open your terminal and run the following commands:
 cd /path/to/my-project.test
 
 # tell Composer to load the plugin
-composer require captcha-eu/craft-captcha-eu
+composer require captcha-eu/craftcms
 
 # tell Craft to install the plugin
 ./craft plugin/install captcha-eu
