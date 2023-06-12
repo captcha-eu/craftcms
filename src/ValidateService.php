@@ -71,6 +71,6 @@ class ValidateService extends Component
 
         Craft::$app->view->registerJsFile($settings->getEndpoint() . "/sdk.js", ['async' => true, 'defer' => true]);
         
-        return "XXX";
+        return "";
     }
 }
