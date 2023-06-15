@@ -29,8 +29,8 @@ class Plugin extends BasePlugin
 {
     public static $plugin;
 
-    public string $schemaVersion = '1.0.0';
-    public bool $hasCpSettings = true;
+    public  $schemaVersion = '1.0.0';
+    public $hasCpSettings = true;
     public ?ValidateService $validate;
     public static function config(): array
     {
@@ -54,7 +54,11 @@ class Plugin extends BasePlugin
                $event->roots['_captcha_eu_cp'] = __DIR__ . '/../templates';
            }
           );
+        Event::on(Integrations::class, Integrations::EVENT_REGISTER_INTEGRATIONS, function(RegisterIntegrationsEvent $event) {
 
+            $event->captchas[] = FormieCaptchaEU::class;
+            // ...
+        });
         Event::on(
             CraftVariable::class,
             CraftVariable::EVENT_INIT,
@@ -74,7 +78,7 @@ class Plugin extends BasePlugin
                 }
             });
         }
-        
+
         // Handle user registration forms
         if ($this->settings->validateUsersRegistration && Craft::$app->getRequest()->getIsSiteRequest()) {
             Event::on(User::class, User::EVENT_BEFORE_VALIDATE, function(ModelEvent $event) {
@@ -89,24 +93,12 @@ class Plugin extends BasePlugin
                     }
                 }
             });
+
         }
-        // Defer most setup tasks until Craft is fully initialized
-        Craft::$app->onInit(function() {
-            $this->attachEventHandlers();
-            // ...
-        });
+
     }
 
-    private function attachEventHandlers(): void
-    {
-        // Register event handlers here ...
-        // (see https://craftcms.com/docs/4.x/extend/events.html to get started)
-        // Register event handlers here ...
-        Event::on(Integrations::class, Integrations::EVENT_REGISTER_INTEGRATIONS, function(RegisterIntegrationsEvent $event) {
-            $event->captchas[] = FormieCaptchaEU::class;
-            // ...
-        });
-    }
+
     /**
      * @inheritdoc
      */

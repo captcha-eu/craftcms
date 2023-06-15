@@ -11,7 +11,7 @@ use verbb\formie\elements\Submission;
 
 class FormieCaptchaEU extends Captcha
 {
-    public ?string $handle = 'FormieCaptchaEU';
+    public  $handle = 'FormieCaptchaEU';
     public ?string $restKey = null;
     public ?string $publicKey = null;
     public ?string $endPoint = null;
@@ -57,7 +57,7 @@ class FormieCaptchaEU extends Captcha
              if(typeof(KROTLoader) == "undefined") {
                  function KROTLoader() {
                       window.KROT_FORMS.forEach(function(f) {
-                       
+
                           f.addEventListener("onFormieCaptchaValidate", function(e) {
                             e.preventDefault();
                             var submitHandler = e.detail.submitHandler;
@@ -66,7 +66,7 @@ class FormieCaptchaEU extends Captcha
                             hiddenField.type = "hidden";
                             hiddenField.className = "captcha_at_hidden_field";
                             hiddenField.name = "captcha_at_solution";
-                            f.appendChild(hiddenField);              
+                            f.appendChild(hiddenField);
                             KROT.getSolution()
                                 .then(function(sol) {
                                     hiddenField.value=JSON.stringify(sol);
@@ -77,7 +77,7 @@ class FormieCaptchaEU extends Captcha
                       });
                  }
              }
-             
+
              (function() {
                const form = document.querySelectorAll(\'input[type="hidden"][name="handle"][value="' . $form->handle . '"]\');
                if(form.length > 0) {
