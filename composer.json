@@ -7,7 +7,6 @@
         "email": "hello@captcha.eu"
     },
     "require": {
-        "php": ">=8.0.2",
         "craftcms/cms": "^3"
     },
     "require-dev": {
