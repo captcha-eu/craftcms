@@ -48,7 +48,7 @@ class FormieCaptchaEU extends Captcha
              if(!window.KROT_FORMS) {
                 window.KROT_FORMS = [];
                 window.CPTWatcher = setInterval(function() {
-                  if(KROT) {
+                  if(window.KROT) {
                       clearInterval(window.CPTWatcher);
                       KROTLoader();
                   }
