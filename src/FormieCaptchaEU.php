@@ -92,7 +92,7 @@ class FormieCaptchaEU extends Captcha
     public function getFrontEndJsVariables(Form $form, $page = null): ?array
     {
         return [
-            'src' => $this->endPoint . "/" . "sdk.js",
+            'src' => App::parseEnv($this->endPoint) . "/" . "sdk.js",
         ];
     }
 
