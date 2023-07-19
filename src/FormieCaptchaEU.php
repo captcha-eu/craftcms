@@ -3,6 +3,7 @@
 namespace CaptchaEU;
 
 use Craft;
+use craft\helpers\App;
 use verbb\formie\base\Captcha;
 use verbb\formie\elements\Form;
 
@@ -43,7 +44,7 @@ class FormieCaptchaEU extends Captcha
         return '
             <script>
              window.CaptchaEUSettings = {
-                    publicSecret: "' . $this->publicKey . '"
+                    publicSecret: "' . App::parseEnv($this->publicKey) . '"
              }
              if(!window.KROT_FORMS) {
                 window.KROT_FORMS = [];
@@ -97,7 +98,7 @@ class FormieCaptchaEU extends Captcha
 
     public function validateSubmission(Submission $submission): bool
     {
-        $svc = new Service($this->endPoint, $this->restKey);
+        $svc = new Service(App::parseEnv($this->endPoint), App::parseEnv($this->restKey));
         $sol = $this->getRequestParam('captcha_at_solution');
 
         return $svc->validate($sol);
