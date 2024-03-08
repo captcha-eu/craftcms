@@ -40,12 +40,15 @@ class FormieCaptchaEU extends Captcha
     }
 
     public function getFrontEndHtml(Form $form, $page = null): string
-    {
+    {   
         return '
             <script>
+             window.CPTOnAllPages = ' .  ($this->showAllPages ? "true" : "false") . ';
              window.CaptchaEUSettings = {
                     publicSecret: "' . App::parseEnv($this->publicKey) . '"
              }
+
+
              if(!window.KROT_FORMS) {
                 window.KROT_FORMS = [];
                 window.CPTWatcher = setInterval(function() {
@@ -58,8 +61,21 @@ class FormieCaptchaEU extends Captcha
              if(typeof(KROTLoader) == "undefined") {
                  function KROTLoader() {
                       window.KROT_FORMS.forEach(function(f) {
-                       
+                        
                           f.addEventListener("onFormieCaptchaValidate", function(e) {
+                            if(e.srcElement.form.submitAction != "submit") {
+                                return;
+                            }
+                            if(!window.CPTOnAllPages) {
+                                // Check if we are multi page
+                                if(e.srcElement.form.settings.hasMultiplePages) {
+                                    var hasCaptchaOnPage = e.srcElement.formTheme.$currentPage.querySelector(".captcha_eu_via_formie");
+                                    if(!hasCaptchaOnPage) {
+                                        return;
+                                    }
+                                    
+                                }
+                            }
                             e.preventDefault();
                             var submitHandler = e.detail.submitHandler;
                             // Add a hidden field
@@ -80,13 +96,21 @@ class FormieCaptchaEU extends Captcha
              }
              
              (function() {
-               const form = document.querySelectorAll(\'input[type="hidden"][name="handle"][value="' . $form->handle . '"]\');
-               if(form.length > 0) {
-                  window.KROT_FORMS.push(form[0].closest("form"));
-               }
+               const forms = document.querySelectorAll(\'input[type="hidden"][name="handle"][value="' . $form->handle . '"]\');
+               if(!window.CPTFormsAdded) { window.CPTFormsAdded = new Set(); }
+
+                forms.forEach(form => {
+                    const closestForm = form.closest("form");
+                    
+                    if (closestForm && !window.CPTFormsAdded.has(closestForm.id)) {
+                        console.log(closestForm.id);
+                        window.KROT_FORMS.push(closestForm);
+                        CPTFormsAdded.add(closestForm.id);
+                    }
+                });
 
              })();
-            </script>';
+            </script><div class="captcha_eu_via_formie"></div>';
     }
 
     public function getFrontEndJsVariables(Form $form, $page = null): ?array
