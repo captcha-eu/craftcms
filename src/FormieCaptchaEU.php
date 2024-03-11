@@ -17,6 +17,10 @@ class FormieCaptchaEU extends Captcha
     public ?string $publicKey = null;
     public ?string $endPoint = null;
 
+    public function getRefreshJsVariables(Form $form, $page = null): ?array
+    {
+        return null;
+    }
     public function getName(): string
     {
         return Craft::t('formie', 'captcha.eu');
