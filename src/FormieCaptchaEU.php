@@ -6,6 +6,7 @@ use Craft;
 use craft\helpers\App;
 use verbb\formie\base\Captcha;
 use verbb\formie\elements\Form;
+use verbb\formie\models\FieldLayoutPage;
 
 
 use verbb\formie\elements\Submission;
@@ -17,9 +18,9 @@ class FormieCaptchaEU extends Captcha
     public ?string $publicKey = null;
     public ?string $endPoint = null;
 
-    public function getRefreshJsVariables(Form $form, $page = null): ?array
+    public function getRefreshJsVariables(Form $form, FieldLayoutPage $page = null): array
     {
-        return null;
+        return [];
     }
     public function getName(): string
     {
@@ -43,7 +44,7 @@ class FormieCaptchaEU extends Captcha
         ]);
     }
 
-    public function getFrontEndHtml(Form $form, $page = null): string
+    public function getFrontEndHtml(Form $form, FieldLayoutPage $page = null): string
     {   
         return '
             <script>
@@ -117,7 +118,7 @@ class FormieCaptchaEU extends Captcha
             </script><div class="captcha_eu_via_formie"></div>';
     }
 
-    public function getFrontEndJsVariables(Form $form, $page = null): ?array
+    public function getFrontEndJsVariables(Form $form, FieldLayoutPage $page = null): ?array
     {
         return [
             'src' => App::parseEnv($this->endPoint) . "/" . "sdk.js",
