@@ -6,10 +6,21 @@ use Craft;
 use craft\helpers\App;
 use verbb\formie\base\Captcha;
 use verbb\formie\elements\Form;
-use verbb\formie\models\FieldLayoutPage;
-
+// Don't directly import FieldLayoutPage to avoid issues with Craft CMS 4
+// use verbb\formie\models\FieldLayoutPage;
 
 use verbb\formie\elements\Submission;
+
+// Check if we're running Craft CMS 5
+$isCraft5 = version_compare(Craft::$app->getVersion(), '5.0.0', '>=');
+
+// Use class_alias to create a compatibility layer
+if ($isCraft5 && class_exists('verbb\formie\models\FieldLayoutPage')) {
+    class_alias('verbb\formie\models\FieldLayoutPage', 'CaptchaEU\FieldLayoutPageProxy');
+} else {
+    // Create a dummy class for Craft CMS 4
+    class FieldLayoutPageProxy {}
+}
 
 class FormieCaptchaEU extends Captcha
 {
@@ -18,10 +29,14 @@ class FormieCaptchaEU extends Captcha
     public ?string $publicKey = null;
     public ?string $endPoint = null;
 
-    public function getRefreshJsVariables(Form $form, FieldLayoutPage $page = null): array
+    /**
+     * Get JS variables for refreshing the captcha
+     */
+    public function getRefreshJsVariables(Form $form, $page = null): array
     {
         return [];
     }
+
     public function getName(): string
     {
         return Craft::t('formie', 'captcha.eu');
@@ -44,7 +59,10 @@ class FormieCaptchaEU extends Captcha
         ]);
     }
 
-    public function getFrontEndHtml(Form $form, FieldLayoutPage $page = null): string
+    /**
+     * Get HTML for the front-end display
+     */
+    public function getFrontEndHtml(Form $form, $page = null): string
     {   
         return '
             <script>
@@ -118,7 +136,10 @@ class FormieCaptchaEU extends Captcha
             </script><div class="captcha_eu_via_formie"></div>';
     }
 
-    public function getFrontEndJsVariables(Form $form, FieldLayoutPage $page = null): ?array
+    /**
+     * Get JS variables for the front-end
+     */
+    public function getFrontEndJsVariables(Form $form, $page = null): ?array
     {
         return [
             'src' => App::parseEnv($this->endPoint) . "/" . "sdk.js",
@@ -127,8 +148,14 @@ class FormieCaptchaEU extends Captcha
 
     public function validateSubmission(Submission $submission): bool
     {
+        $isCraft5 = version_compare(Craft::$app->getVersion(), '5.0.0', '>=');
         $svc = new Service(App::parseEnv($this->endPoint), App::parseEnv($this->restKey));
-        $sol = $this->getRequestParam('captcha_at_solution');
+        if($isCraft5) {
+            $sol = $this->getCaptchaValue($submission,'captcha_at_solution');
+        } else {
+            $sol = $this->getRequestParam('captcha_at_solution');
+        }
+        
 
         return $svc->validate($sol);
     }
