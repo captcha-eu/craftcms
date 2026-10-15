@@ -38,6 +38,33 @@
 })
 }}
 
+{{ forms.selectField({
+    label: 'Widget Mode',
+    instructions: 'Invisible runs silently in the background. Visible widget shows an "I am human" checkbox. Only applies to forms using craft.captchaEU.intercept().',
+    id: 'mode',
+    name: 'mode',
+    options: [
+        { label: 'Invisible (default)', value: 'invisible' },
+        { label: 'Visible widget', value: 'widget' },
+    ],
+    value: settings.mode,
+    errors: settings.getErrors('mode')
+}) }}
+
+{{ forms.selectField({
+    label: 'Widget Theme',
+    instructions: 'Only used when Widget Mode is set to "Visible widget".',
+    id: 'theme',
+    name: 'theme',
+    options: [
+        { label: 'Light', value: 'light' },
+        { label: 'Dark', value: 'dark' },
+        { label: 'Auto', value: 'auto' },
+    ],
+    value: settings.theme,
+    errors: settings.getErrors('theme')
+}) }}
+
 <hr>
 
 <h2>Validate forms automatically:</h2>
