@@ -47,7 +47,7 @@ class Variables
      * @throws Exception
      * @throws InvalidConfigException
      */
-    public function intercept(array $attributes = []): String
+    public function intercept(array $attributes = []): string|Markup
     {
         return Plugin::$plugin->validate->intercept($attributes);
     }

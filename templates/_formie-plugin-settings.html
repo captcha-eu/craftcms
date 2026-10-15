@@ -28,3 +28,24 @@
     warning: macros.configWarning('endPoint', 'formie'),
 }) }}
 
+{{ forms.selectField({
+    label: 'Widget Mode' | t('formie'),
+    name: 'mode',
+    options: [
+        { label: 'Invisible (default)' | t('formie'), value: 'invisible' },
+        { label: 'Visible Widget' | t('formie'), value: 'widget' },
+    ],
+    value: integration.settings.mode ?? 'invisible',
+}) }}
+
+{{ forms.selectField({
+    label: 'Widget Theme' | t('formie'),
+    name: 'theme',
+    instructions: 'Only used when Widget Mode is set to "Visible Widget".' | t('formie'),
+    options: [
+        { label: 'Light' | t('formie'), value: 'light' },
+        { label: 'Dark' | t('formie'), value: 'dark' },
+        { label: 'Auto' | t('formie'), value: 'auto' },
+    ],
+    value: integration.settings.theme ?? 'light',
+}) }}

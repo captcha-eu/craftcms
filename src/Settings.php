@@ -8,59 +8,46 @@ use craft\helpers\App;
 
 class Settings extends Model
 {
-    /**
-     * @var string
-     */
+    public const MODE_INVISIBLE = 'invisible';
+    public const MODE_WIDGET = 'widget';
+
     public string $publicKey = '';
-
-    /**
-     * @var string
-     */
     public string $restKey = '';
-
-    /**
-     * Validate ContactForm
-     *
-     * @var bool
-     */
     public bool $validateContactForm = false;
-
-    /**
-     * Validate UsersRegistration
-     *
-     * @var bool
-     */
     public bool $validateUsersRegistration = false;
-
-    
-    /**
-     * @var string
-     */
     public string $endpoint = 'https://www.captcha.eu';
 
-    
-    /**
-     * @return string
-     */
+    public string $mode = self::MODE_INVISIBLE;
+    public string $theme = 'light';
+
     public function getPublicKey(): string
     {
         return App::parseEnv($this->publicKey);
     }
 
-    /**
-     * @return string
-     */
     public function getRestKey(): string
     {
         return App::parseEnv($this->restKey);
     }
 
-    /**
-     * @return ?string
-     */
     public function getEndpoint(): ?string
     {
         return App::parseEnv($this->endpoint);
+    }
+
+    public function getMode(): string
+    {
+        return $this->mode ?: self::MODE_INVISIBLE;
+    }
+
+    public function isWidgetMode(): bool
+    {
+        return $this->getMode() === self::MODE_WIDGET;
+    }
+
+    public function getTheme(): string
+    {
+        return $this->theme ?: 'light';
     }
 
     public function behaviors(): array
@@ -82,6 +69,8 @@ class Settings extends Model
             [['publicKey', 'restKey', 'endpoint'], 'required'],
             ['validateContactForm', 'boolean'],
             ['validateUsersRegistration', 'boolean'],
+            ['mode', 'in', 'range' => [self::MODE_INVISIBLE, self::MODE_WIDGET]],
+            ['theme', 'in', 'range' => ['light', 'dark', 'auto']],
         ];
     }
 }

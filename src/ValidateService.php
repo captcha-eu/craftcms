@@ -9,6 +9,8 @@ use craft\helpers\Html;
 use Exception;
 use Twig\Markup;
 use yii\base\InvalidConfigException;
+use craft\web\View;
+use CaptchaEU\assets\FrontendAsset;
 
 class ValidateService extends Component
 {
@@ -65,12 +67,26 @@ class ValidateService extends Component
      * @throws \yii\base\Exception
      * @throws InvalidConfigException
      */
-    public function intercept(array $attributes = []): String
+
+    public function intercept(array $attributes = []): string|Markup
     {
         $settings = Plugin::$plugin->getSettings();
+        $view = Craft::$app->getView();
 
-        Craft::$app->view->registerJsFile($settings->getEndpoint() . "/sdk.js", ['async' => true, 'defer' => true]);
-        
-        return "";
+        $view->registerJsFile($settings->getEndpoint() . '/sdk.js', ['async' => true, 'defer' => true]);
+        FrontendAsset::register($view);
+
+        $data = [
+            'data-captchaeu' => $settings->isWidgetMode() ? 'widget' : 'invisible',
+            'data-key' => $settings->getPublicKey(),
+            'data-host' => $settings->getEndpoint(),
+            'data-theme' => $settings->getTheme(),
+        ];
+
+        $marker = $settings->isWidgetMode()
+            ? Html::tag('div', '', ['class' => 'cpt_widget'] + $data)
+            : Html::tag('span', '', ['hidden' => true] + $data);
+
+        return new Markup($marker . Html::hiddenInput('captcha_at_solution', ''), 'UTF-8');
     }
 }
